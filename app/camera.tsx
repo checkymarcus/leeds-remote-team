@@ -8,6 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  "https://uhqkbcxmjnqjhwbmupzq.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVocWtiY3htam5xamh3Ym11cHpxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc0Mjg3MzgsImV4cCI6MjA0MzAwNDczOH0.meeCMyXfLWNLgmU7b0RAWQMYXwemFFZ6ZSJTe5cvLfw"
+);
 
 export default function cameraFunc() {
   const [facing, setFacing] = useState<CameraType>("back");
@@ -31,10 +37,29 @@ export default function cameraFunc() {
       </View>
     );
   }
+  const sendImage = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const arrayBuffer = await new Response(blob).arrayBuffer();
+    console.log("arrayBuffer", arrayBuffer.byteLength);
+
+    const fileName = `public/${Date.now()}.jpg`;
+    const { error } = await supabase.storage
+      .from("ClothingImages")
+      .upload(fileName, arrayBuffer, {
+        contentType: "image/jpeg",
+        upsert: false,
+      });
+    if (error) {
+      console.log("error uploading image:", error);
+    }
+  };
 
   const hanldeTakePhoto = async () => {
     if (cameraRef.current) {
-      const takenPhoto = await cameraRef.current.takePictureAsync();
+      const takenPhoto = await cameraRef.current.takePictureAsync({
+        base64: true,
+      });
       setClothesImage(takenPhoto);
     }
   };
@@ -43,7 +68,7 @@ export default function cameraFunc() {
   }
 
   if (clothesImage) {
-    console.log(clothesImage);
+    sendImage(clothesImage.uri);
     return (
       <View>
         <Text>Hello</Text>
