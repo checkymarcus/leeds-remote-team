@@ -14,7 +14,7 @@ import axios from "axios";
 import { postImage } from "./ximilar";
 import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { googleApiKey } from "../ignoreme";
+import { andrewsHat } from "../ignoreme";
 
 const supabase = createClient(
   "https://uhqkbcxmjnqjhwbmupzq.supabase.co",
@@ -119,7 +119,7 @@ export default function cameraFunc() {
 
     const googleFunction = async () => {
       const fileManager = new GoogleAIFileManager(
-        process.env.AIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U
+        process.env.andrewsHat
       );
 
       const uploadResult = await fileManager.uploadFile(
