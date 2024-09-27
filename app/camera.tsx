@@ -120,7 +120,7 @@ export default function cameraFunc() {
     const googleFunction = async () => {
       // // Replace 'YOUR_GOOGLE_CLOUD_VISION_API_KEY' with your actual API key
       // try {
-      //   const apiUrl = `https://vision.googleapis.com/v1/images:annotate?key=gAIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U`;
+      //   const apiUrl = `https://vision.googleapis.com/v1/images:annotate?key=<apikey>`;
 
       //   // Read the image file from local URI and convert it to base64
       //   const requestData = {
@@ -182,7 +182,7 @@ export default function cameraFunc() {
 
   //   axios
   //     .post(
-  //       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U",
+  //       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=<apikey>",
   //       {
   //         records: [
   //           {
@@ -213,8 +213,6 @@ export default function cameraFunc() {
   //       />
   //     </View>
   //   );
-
-  //"AIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U"
 
   return (
     <View style={styles.container}>
