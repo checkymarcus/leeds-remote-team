@@ -1,6 +1,7 @@
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRef, useState } from "react";
 import {
+  AppRegistry,
   Button,
   Image,
   StyleSheet,
@@ -9,6 +10,8 @@ import {
   View,
 } from "react-native";
 import { createClient } from "@supabase/supabase-js";
+import axios from "axios";
+import { postImage } from "./ximilar";
 
 const supabase = createClient(
   "https://uhqkbcxmjnqjhwbmupzq.supabase.co",
@@ -19,6 +22,7 @@ export default function cameraFunc() {
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [clothesImage, setClothesImage] = useState(null);
+  const [responseJson, setResponseJson] = useState(null);
   const cameraRef = useRef(null);
 
   if (!permission) {
@@ -69,6 +73,25 @@ export default function cameraFunc() {
 
   if (clothesImage) {
     sendImage(clothesImage.uri);
+    console.log(clothesImage.base64, "<-------base64");
+    // postImage(
+    //   "https://api.ximilar.com/tagging/fashion/v2/top_categories",
+    //   clothesImage
+    // );
+    axios
+      .post(
+        "https://api.ximilar.com/tagging/fashion/v2/detect_tags",
+        clothesImage.base64,
+        {
+          headers: {
+            Authorisation: "Token fa62910f8e5841247fb5e78d409d38d0cc1fef46",
+            "Content-Type": "multipart/form",
+          },
+        }
+      )
+      .then((data) => {
+        console.log(data, "<------data");
+      });
     return (
       <View>
         <Text>Hello</Text>
