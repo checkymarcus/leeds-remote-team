@@ -73,25 +73,36 @@ export default function cameraFunc() {
 
   if (clothesImage) {
     sendImage(clothesImage.uri);
-    console.log(clothesImage.base64, "<-------base64");
+
     // postImage(
     //   "https://api.ximilar.com/tagging/fashion/v2/top_categories",
     //   clothesImage
     // );
+
     axios
       .post(
-        "https://api.ximilar.com/tagging/fashion/v2/detect_tags",
-        clothesImage.base64,
+        "https://api.ximilar.com/tagging/fashion/v2/detect_tags_all",
+        {
+          records: [
+            {
+              _base64: clothesImage.base64, // Use "_base64" to send the image in base64 format
+            },
+          ],
+        },
         {
           headers: {
-            Authorisation: "Token fa62910f8e5841247fb5e78d409d38d0cc1fef46",
-            "Content-Type": "multipart/form",
+            Authorization: "Token fa62910f8e5841247fb5e78d409d38d0cc1fef46",
+            "Content-Type": "application/json", // Ensure JSON format for the request body
           },
         }
       )
-      .then((data) => {
-        console.log(data, "<------data");
+      .then((response) => {
+        console.log(response.data.records[0]._objects);
+      })
+      .catch((err) => {
+        console.log(err);
       });
+
     return (
       <View>
         <Text>Hello</Text>
