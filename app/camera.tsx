@@ -118,91 +118,101 @@ export default function cameraFunc() {
     // }
 
     const googleFunction = async () => {
-      const fileManager = new GoogleAIFileManager(
-        process.env.andrewsHat
-      );
+      // // Replace 'YOUR_GOOGLE_CLOUD_VISION_API_KEY' with your actual API key
+      // try {
+      //   const apiUrl = `https://vision.googleapis.com/v1/images:annotate?key=gAIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U`;
+
+      //   // Read the image file from local URI and convert it to base64
+      //   const requestData = {
+      //     requests: [
+      //       {
+      //         image: {
+      //           content: clothesImage.base64.NO_WRAP,
+      //         },
+      //         features: [{ type: "LABEL_DETECTION", maxResults: 5 }],
+      //       },
+      //     ],
+      //   };
+
+      //   const apiResponse = await axios.post(apiUrl, requestData);
+      //   console.log(apiResponse.data.responses[0].labelAnnotations);
+      // } catch (error) {
+      //   console.error("Error analyzing image:", error);
+      //   alert("Error analyzing image. Please try again later.");
+      // }
+      const fileManager = new GoogleAIFileManager(process.env.andrewsHat);
 
       const uploadResult = await fileManager.uploadFile(
         `https://uhqkbcxmjnqjhwbmupzq.supabase.co/storage/v1/object/public/ClothingImages/public/1727447675611.jpg`,
         {
           mimeType: "image/jpeg",
-          displayName: "Testing Image",
+          displayName: "Jetpack drawing",
         }
       );
-
-      return (
-        <View>
-          <Text>Hello</Text>
-          <Image
-            source={{ uri: clothesImage.uri }}
-            style={{ width: 400, height: 400 }}
-          />
-        </View>
+      // View the response.
+      console.log(
+        `Uploaded file ${uploadResult.file.displayName} as: ${uploadResult.file.uri}`
       );
-    };
 
-
-      // Replace 'YOUR_GOOGLE_CLOUD_VISION_API_KEY' with your actual API key
-      const apiKey = '#################################';
-      const apiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`;
-
-      // Read the image file from local URI and convert it to base64
-      const base64ImageData = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const requestData = {
-        requests: [
-          {
-            image: {
-              content: base64ImageData,
-            },
-            features: [{ type: 'LABEL_DETECTION', maxResults: 5 }],
+      const genAI = new GoogleGenerativeAI(process.env.andrewsHat);
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const result = await model.generateContent([
+        "Tell me about this image.",
+        {
+          fileData: {
+            fileUri: uploadResult.file.uri,
+            mimeType: uploadResult.file.mimeType,
           },
-        ],
-      };
+        },
+      ]);
+      console.log(result.response.text());
+    };
+    googleFunction();
 
-      const apiResponse = await axios.post(apiUrl, requestData);
-      setLabels(apiResponse.data.responses[0].labelAnnotations);
-    } catch (error) {
-      console.error('Error analyzing image:', error);
-      alert('Error analyzing image. Please try again later.');
-    }
-  };
-    //   axios
-    //     .post(
-    //       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U",
-    //       {
-    //         records: [
-    //           {
-    //             _base64: clothesImage.base64, // Use "_base64" to send the image in base64 format
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         headers: {
-    //           // Authorization: "Token fa62910f8e5841247fb5e78d409d38d0cc1fef46",
-    //           "Content-Type": "application/json", // Ensure JSON format for the request body
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       console.log(response);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-
-    //   return (
-    //     <View>
-    //       <Text>Hello</Text>
-    //       <Image
-    //         source={{ uri: clothesImage.uri }}
-    //         style={{ width: 400, height: 400 }}
-    //       />
-    //     </View>
-    //   );
+    return (
+      <View>
+        <Text>Hello</Text>
+        <Image
+          source={{ uri: clothesImage.uri }}
+          style={{ width: 400, height: 400 }}
+        />
+      </View>
+    );
   }
+
+  //   axios
+  //     .post(
+  //       "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U",
+  //       {
+  //         records: [
+  //           {
+  //             _base64: clothesImage.base64, // Use "_base64" to send the image in base64 format
+  //           },
+  //         ],
+  //       },
+  //       {
+  //         headers: {
+  //           // Authorization: "Token fa62910f8e5841247fb5e78d409d38d0cc1fef46",
+  //           "Content-Type": "application/json", // Ensure JSON format for the request body
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+
+  //   return (
+  //     <View>
+  //       <Text>Hello</Text>
+  //       <Image
+  //         source={{ uri: clothesImage.uri }}
+  //         style={{ width: 400, height: 400 }}
+  //       />
+  //     </View>
+  //   );
 
   //"AIzaSyBs_zdUtQdLB029cNKDOMnFE1nt9sN_57U"
 
