@@ -91,7 +91,7 @@ export default function cameraFunc() {
         },
         {
           headers: {
-            Authorization: "Token fa62910f8e5841247fb5e78d409d38d0cc1fef46",
+            Authorization: 
             "Content-Type": "application/json", // Ensure JSON format for the request body
           },
         }
